@@ -1,57 +1,44 @@
-// const person : {
-//   name: string;
-//   age: number;
-// } = {
-// const person: {
-//   name: string;
-//   age: number;
-//   hobbies: string[];
-//   role: [number, string]; //tuples - fixed length array
-// } = {
-//   name: 'nischay',
-//   age: 23,
-//   hobbies: ['sprots', 'cooking'],
-//   role: [1, 'developer']
-// };
+// union types, literal types & type aliases
 
-enum Role {ADMIN=4, READ_ONLY, AUTHOR};
+type combinable = number | string; // type aliases
+type conversionDescriptor = 'as-number' | 'as-text'
 
-const person = {
-  name: 'nischay',
-  age: 23,
-  hobbies: ['sprots', 'cooking'],
-  role: Role.ADMIN
-};
-
-// person.role.push('admin'); // pushing is allowed in tuples but you cant increase the length
-// person.role[1] = 10; not allowed error
-
-console.log(person);
-
-for (const hobby of person.hobbies) {
-  console.log(hobby);
+function combine(input1: combinable, input2: combinable, resultConversion: conversionDescriptor) {
+  let result;
+  if (typeof input1 === 'number' && typeof input2 === 'number' || resultConversion === 'as-number') {
+    result = +input1 + +input2;
+  } else {
+    result = input1.toString() + input2.toString();
+  }
+  return result;
+//   if (resultConversion === 'as-number') {
+//     return +result;
+//   } else {
+//     return result.toString();
+//   }
 }
 
-if (person.role === Role.ADMIN) {
-  console.log('is admin');
+const combinedAges = combine(30, 26, 'as-number');
+console.log(combinedAges);
+
+const combinedStringsAges = combine('30', '26', 'as-number');
+console.log(combinedStringsAges);
+
+const combinedNames = combine('nischay', 'verma', 'as-text');
+console.log(combinedNames);
+
+type User = { name: string; age: number };
+const u1: User = { name: 'nischay', age: 23 }; 
+
+function greet(u1: User) {
+  console.log('Hi, I am ' + u1.name);
 }
 
-// const product = {
-//   id: 'abc1',
-//   price: 12.99,
-//   tags: ['great-offer', 'hot-and-new'],
-//   details: {
-//     title: 'Red Carpet',
-//     description: 'A great carpet - almost brand-new!'
-//   }
-// }
+greet(u1);
+ 
+function isOlder(u1: User, checkAge: number) {
+  return checkAge > u1.age;
+}
 
-// {
-//   id: string;
-//   price: number;
-//   tags: string[];
-//   details: {
-//     title: string;
-//     description: string;
-//   }
-// }
+const truth = isOlder(u1, 25);
+console.log(truth);

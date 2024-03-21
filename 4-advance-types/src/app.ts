@@ -104,3 +104,49 @@ function moveAnimal(animal: Animal) {
 }
 
 moveAnimal({type: 'Bird', flyingSpeed: 10});
+
+// type casting
+// const userInputElement = <HTMLInputElement>document.getElementById('user-input')!;
+const userInputElement = document.getElementById('user-input');
+
+if (userInputElement) {
+  (userInputElement as HTMLInputElement).value = 'Hi there!';
+}
+
+// index properties
+interface ErrorContainer {  // { email: 'not a valid email', username: 'must start with a character' }
+  [prop: string]: string;
+}
+
+const errorBag: ErrorContainer = {
+  email: 'Not a valid email!',
+  username: 'Must start with a capital character'
+}
+
+// function overloads
+function addition(a: number, b: number): number;
+function addition(a: string, b: string): string;
+function addition(a: number, b: string): string;
+function addition(a: string, b: number): string;
+function addition(a: Combinable, b: Combinable) {
+  if (typeof a === 'string' || typeof b === 'string') {  
+    return a.toString() + b.toString();
+  }
+  return a+b;
+}
+
+const result = addition('Nischay', 'Verma');
+
+// optional chaining
+const fetchedUserData = {
+  id: 'u1',
+  name: 'Nischay',
+  job: { title: 'developer', description: 'company'}
+};
+
+console.log(fetchedUserData?.job?.title);
+
+// nullish coalescing (null or undefined)
+const userInput = undefined;
+const storedData = userInput ?? 'default';
+console.log(storedData);

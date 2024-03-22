@@ -32,3 +32,46 @@ function countAndDescribe<T extends Lengthy>(element: T): [T, string] { // tuple
 console.log(countAndDescribe('Hi there'));
 
 // keyof constraint
+function extractAndConvert<T extends object, U extends keyof T>(
+  obj: T,
+  key: U
+) {
+  return 'Value: ' + obj[key];
+}
+
+extractAndConvert({name: 'Nischay'}, 'name');
+
+// generic classes
+class DataStorage<T extends string | number | boolean> {
+  private data: T[] = [];
+
+  addItem(item: T) {
+    this.data.push(item);
+  }
+
+  removeItem(item: T) {
+    if (this.data.indexOf(item) === -1) {
+      return;
+    }
+    this.data.splice(this.data.indexOf(item), 1);
+  }
+
+  getItems() {
+    return [...this.data];
+  }
+}
+
+const textStorage = new DataStorage<string>();
+textStorage.addItem('Nischay');
+textStorage.addItem('Verma');
+textStorage.removeItem('Verma');
+console.log(textStorage.getItems());
+
+// const objStorage = new DataStorage<object>();
+// const maxObj = {name: 'Nischay'};
+// objStorage.addItem(maxObj);
+// objStorage.addItem({name: 'Verma'});
+// objStorage.removeItem(maxObj);
+// console.log(objStorage.getItems());
+
+// generic utility types

@@ -1,0 +1,1 @@
+// returning ( and changing ) a class in a class decorator

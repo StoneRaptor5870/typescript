@@ -75,3 +75,22 @@ console.log(textStorage.getItems());
 // console.log(objStorage.getItems());
 
 // generic utility types
+// partial
+interface CourseGoal {
+  title: string;
+  description: string;
+  completeUntil: Date;
+}
+
+function createCourseGoal(title: string, description: string, date: Date): CourseGoal {
+  let courseGoal: Partial<CourseGoal> = {};
+  courseGoal.title = title;
+  courseGoal.description = description;
+  courseGoal.completeUntil = date;
+  return courseGoal as CourseGoal;
+}
+
+// readonly
+const stuff: Readonly<string[]> = ['Nischay', 'Verma'];
+// stuff.push('Anuj'); not allowed in readonly
+// stuff.pop();

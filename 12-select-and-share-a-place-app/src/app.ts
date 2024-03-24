@@ -1,0 +1,74 @@
+import axios from "axios";
+
+declare const L: any;
+const ZOOM = 13;
+
+const form = document.querySelector("form")!;
+const addressInput = document.getElementById("address") as HTMLInputElement;
+const map = L.map("map");
+
+type NominatimGeocodingResponse = {
+  features: {
+    geometry: { coordinates: { lat: Number; lng: Number }[] };
+    properties: {
+      geocoding: {
+        city: string;
+        country: string;
+        name: string;
+        district: string;
+      };
+    };
+  }[];
+  status: 200;
+};
+
+function searchAddressHandler(event: Event) {
+  event.preventDefault();
+  const enteredAddress = addressInput.value;
+
+  axios
+    .get<NominatimGeocodingResponse>(
+      `https://nominatim.openstreetmap.org/?addressdetails=1&q=${encodeURI(
+        enteredAddress
+      )}&format=geocodejson&limit=1`
+    )
+    .then((response) => {
+      console.log(response);
+      if (!response.data.features.length) {
+        throw new Error("Could not fetch location!");
+      }
+
+      const coordinates = [
+        response.data.features[0].geometry.coordinates[1],
+        response.data.features[0].geometry.coordinates[0],
+      ];
+
+      const location = {
+        city: response.data.features[0].properties.geocoding.city,
+        name: response.data.features[0].properties.geocoding.name,
+        district: response.data.features[0].properties.geocoding.district,
+        country: response.data.features[0].properties.geocoding.country,
+      };
+
+      console.log(location);
+
+      map.setView(coordinates, ZOOM);
+
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      L.marker(coordinates)
+        .addTo(map)
+        .bindPopup(
+          `${location.city}<br>${location.name}<br>${location.district}<br>${location.country}`
+        )
+        .openPopup();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+form.addEventListener("submit", searchAddressHandler);
